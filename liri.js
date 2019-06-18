@@ -1,13 +1,15 @@
 require("dotenv").config();
 
-var keys = require("./keys.js");
-var spotify = new Spotify(keys.spotify);
-
 let request = require("request");
+
 
 const moment = require("moment");
 const fs = require("fs");
-const Spotify = require ("node-spotify-api");
+
+var keys = require("./keys.js");
+
+const Spotify = require("spotify-web-api-node");
+var spotify = new Spotify(keys.spotify);
 
 let omdb = (keys.omdb);
 let bandsintown = (keys.bandsintown);
@@ -27,7 +29,7 @@ function userControl(userInput, userQuery) {
                 movieThis();
                 break;
        case "do-what-it-says":
-            doWhatItSays();
+            doWhatItSays(userQuery);
             break;
             default:
         console.log("This is cool!");
@@ -35,10 +37,10 @@ function userControl(userInput, userQuery) {
     }
 }
 
-userCommand(userInput, userQuery);
+userControl(userInput, userQuery);
 function concertThis() {
     console.log ("Searching for shows: ")
-    request (`"https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"` + bandsintown, function (error, response, body){
+    request (`"https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"` + userQuery + bandsintown, function (error, response, body){
         if (!error && response.statusCode === 200) {
             let userBand = JSON.parse(body);
         if (userBand.length > 0) {
